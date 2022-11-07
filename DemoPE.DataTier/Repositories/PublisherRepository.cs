@@ -48,6 +48,8 @@ namespace DemoPE.DataTier.Repositories
             var publisher = dbContext.Publishers.SingleOrDefault(x => x.PublisherId == entity.PublisherId);
             if (publisher is not null)
             {
+                publisher.PublisherName = entity.PublisherName;
+                publisher.Description = entity.Description;
                 dbContext.Publishers.Update(publisher);
                 dbContext.SaveChanges();
             }

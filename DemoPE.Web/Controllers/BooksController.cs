@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoEFCore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DemoPE.Web.Controllers
 {
@@ -19,6 +20,7 @@ namespace DemoPE.Web.Controllers
         }
 
         // GET: Books
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var bookPublisherContext = _context.Books.Include(b => b.Publisher);

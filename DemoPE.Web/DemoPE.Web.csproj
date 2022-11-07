@@ -1,10 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
       <PrivateAssets>all</PrivateAssets>
@@ -16,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DemoPE.BusinessTier\DemoPE.BusinessTier.csproj" />
     <ProjectReference Include="..\DemoPE.DataTier\DemoPE.DataTier.csproj" />
-    <ProjectReference Include="..\DemoPE\DemoPE.DataTier\DemoPE.DataTier.csproj" />
   </ItemGroup>
+
 
 </Project>

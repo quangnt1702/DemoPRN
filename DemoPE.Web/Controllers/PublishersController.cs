@@ -6,22 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoEFCore.Models;
+using DemoPE.DataTier.Repositories;
 
 namespace DemoPE.Web.Controllers
 {
     public class PublishersController : Controller
     {
-        private readonly BookPublisherContext _context;
+        private readonly IRepository<Publisher> _repository;
 
-        public PublishersController(BookPublisherContext context)
+        public PublishersController(IRepository<Publisher> repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Publishers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Publishers.ToListAsync());
+            return View(_repository.Get());
         }
 
         // GET: Publishers/Details/5
@@ -32,8 +33,7 @@ namespace DemoPE.Web.Controllers
                 return NotFound();
             }
 
-            var publisher = await _context.Publishers
-                .FirstOrDefaultAsync(m => m.PublisherId == id);
+            var publisher = _repository.GetById((Guid)id);
             if (publisher == null)
             {
                 return NotFound();
@@ -57,9 +57,7 @@ namespace DemoPE.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                publisher.PublisherId = Guid.NewGuid();
-                _context.Add(publisher);
-                await _context.SaveChangesAsync();
+                _repository.Create(publisher);
                 return RedirectToAction(nameof(Index));
             }
             return View(publisher);
@@ -73,7 +71,7 @@ namespace DemoPE.Web.Controllers
                 return NotFound();
             }
 
-            var publisher = await _context.Publishers.FindAsync(id);
+            var publisher = _repository.GetById((Guid)id);
             if (publisher == null)
             {
                 return NotFound();
@@ -97,8 +95,7 @@ namespace DemoPE.Web.Controllers
             {
                 try
                 {
-                    _context.Update(publisher);
-                    await _context.SaveChangesAsync();
+                    _repository.Update(publisher);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +121,7 @@ namespace DemoPE.Web.Controllers
                 return NotFound();
             }
 
-            var publisher = await _context.Publishers
-                .FirstOrDefaultAsync(m => m.PublisherId == id);
+            var publisher = _repository.GetById((Guid)id);
             if (publisher == null)
             {
                 return NotFound();
@@ -139,15 +135,13 @@ namespace DemoPE.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var publisher = await _context.Publishers.FindAsync(id);
-            _context.Publishers.Remove(publisher);
-            await _context.SaveChangesAsync();
+            _repository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool PublisherExists(Guid id)
         {
-            return _context.Publishers.Any(e => e.PublisherId == id);
+            return _repository.GetById(id) != null;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DemoPE.DataTier.Repositories
 {
-     interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         T GetById(Guid id);
         List<T> Get();
