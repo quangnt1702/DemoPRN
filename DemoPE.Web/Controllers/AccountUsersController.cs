@@ -6,21 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoEFCore.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace DemoPE.Web.Controllers
 {
     public class AccountUsersController : Controller
     {
         private readonly BookPublisherContext _context;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public AccountUsersController(BookPublisherContext context)
+        public AccountUsersController(BookPublisherContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         // GET: AccountUsers
         public async Task<IActionResult> Index()
         {
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                return null;
+            }
             return View(await _context.AccountUsers.ToListAsync());
         }
 
